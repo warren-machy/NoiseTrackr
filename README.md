@@ -86,13 +86,7 @@ All these tools are combined together to create the following architecture:
 4) **InfluxDB to Grafana**: Configure Grafana to connect to InfluxDB and create dashboards for data visualization.
 
 This setup ensures that data from your sensors is effectively transmitted, processed, stored, and visualized using a combination of TTN, Azure services, InfluxDB, and Grafana.
-<ul>
-    <li><b>Gabriel Witte</b>: RestAPI setup and communication + ML operations </li>
-    <li><b>Tafara Warren Machiridza</b>: Grafana setup and dashboard creation</li>
-    <li><b>Victor Owolabi</b>: Network protocols and setup</li>
-    <li><b>Saruni Fernando</b>: Database setup and design</li>
-    <li><b>Luiza Landinger</b>: Register the sound sensor, CO2 sensor and the gateway on TTN </li>
-</ul>
+
 
 ## Costs
 Month: June
