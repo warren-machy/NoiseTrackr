@@ -1,0 +1,60 @@
+#
+#stages:
+#  - deploy
+#
+#variables:
+#  FUNCTION_APP_NAME: "noisetrackr-function-app" # Replace with your Azure Function App name
+#  AZURE_RESOURCE_GROUP: "noisetrackr"
+#  GIT_SSL_NO_VERIFY: 1
+#  AZURE_CLI_DISABLE_CONNECTION_VERIFICATION : 1
+#  ADAL_PYTHON_SSL_NO_VERIFY : 1
+## Replace with your Azure Resource Group name
+#
+#deploy:
+#  stage: deploy
+#  image: ubuntu:20.04
+#  before_script:
+#    - apt-get update && apt-get install -y curl apt-transport-https lsb-release gnupg zip
+#    - curl -sL https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > /usr/share/keyrings/azure-archive-keyring.gpg
+#    - echo "deb [arch=amd64 signed-by=/usr/share/keyrings/azure-archive-keyring.gpg] https://packages.microsoft.com/repos/azure-cli/ $(lsb_release -cs) main" > /etc/apt/sources.list.d/azure-cli.list
+#    - apt-get update && apt-get install -y azure-cli
+#
+#  script:
+#    - echo "Deploying to Azure Function App..."
+#    # Log in to Azure
+#    - export REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt
+#    - export ADAL_PYTHON_SSL_NO_VERIFY=1
+#    - export AZURE_CLI_DISABLE_CONNECTION_VERIFICATION=1
+#    - az login --service-principal -u $client_id -p $client_secret --tenant $tenant_id
+#    # Zip the function app code
+#    - zip -r functionapp.zip .
+#    # Upload and deploy the function app code
+#    - az functionapp deployment source config-zip -g $AZURE_RESOURCE_GROUP -n $FUNCTION_APP_NAME --src functionapp.zip
+
+stages:
+  - build
+  - deploy
+variables:
+  DOCKER_IMAGE_NAME: "noisetrackracr.azurecr.io/eventhubtoinflux"
+  AZURE_ACR_NAME: "noisetrackracr"
+  AZURE_ACR_LOGIN_SERVER : $AZURE_ACR_LOGIN_SERVER
+
+build:
+  stage: build
+  image:  docker:latest
+  services:
+    - docker:23-dind
+  script:
+    - docker build -t $DOCKER_IMAGE_NAME .
+    # Use the access token to perform docker login to the registry
+    - docker login noisetrackracr.azurecr.io --username noisetrackracr --password $REG_PASSWORD
+    - docker push $DOCKER_IMAGE_NAME
+
+deploy:
+  stage: deploy
+  image:  mcr.microsoft.com/azure-cli
+  script:
+    # Your deployment commands here
+    - echo "Deployment commands go here"
+  only:
+    - master

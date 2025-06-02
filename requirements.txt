@@ -1,0 +1,10 @@
+matplotlib
+paho-mqtt~=2.1.0
+sounddevice~=0.4.6
+numpy==1.26.4
+scipy
+azure-functions
+influxdb-client
+prophet~=1.1.5
+azure-storage-blob
+pandas
